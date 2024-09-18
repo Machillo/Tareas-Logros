@@ -37,9 +37,11 @@ const Login = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100">
-              Iniciar Sesión
-            </Button>
+            <Link to="/dashboard">
+              <Button variant="primary" className="w-100" type="submit">
+                Iniciar Sesión
+              </Button>
+            </Link>
           </Form>
           <p className="text-center mt-3">
             ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
