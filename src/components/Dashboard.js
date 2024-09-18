@@ -4,36 +4,49 @@ import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
-  const [points, setPoints] = useState(0);
-  const [achievements, setAchievements] = useState([]);
 
   const handleAddTask = () => {
     if (newTask) {
-      setTasks([...tasks, { name: newTask, completed: false }]);
+      setTasks([...tasks, { name: newTask, status: 'todo' }]);
       setNewTask('');
     }
   };
 
-  const handleCompleteTask = (index) => {
+  const moveTask = (index, newStatus) => {
     const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, completed: true } : task
+      i === index ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
-    setPoints(points + 10); // Asigna 10 puntos por tarea completada
-    checkAchievements(points + 10);
   };
 
-  const checkAchievements = (newPoints) => {
-    const newAchievements = [];
-
-    if (newPoints >= 50 && !achievements.includes('Primer logro: 50 puntos')) {
-      newAchievements.push('Primer logro: 50 puntos');
-    }
-    if (newPoints >= 100 && !achievements.includes('Segundo logro: 100 puntos')) {
-      newAchievements.push('Segundo logro: 100 puntos');
-    }
-
-    setAchievements([...achievements, ...newAchievements]);
+  const renderTasks = (status) => {
+    return tasks
+      .filter((task) => task.status === status)
+      .map((task, index) => (
+        <li key={index} className="list-group-item">
+          {task.name}
+          {status === 'todo' && (
+            <Button
+              variant="primary"
+              size="sm"
+              className="float-right"
+              onClick={() => moveTask(index, 'in-progress')}
+            >
+              Iniciar
+            </Button>
+          )}
+          {status === 'in-progress' && (
+            <Button
+              variant="success"
+              size="sm"
+              className="float-right"
+              onClick={() => moveTask(index, 'completed')}
+            >
+              Completar
+            </Button>
+          )}
+        </li>
+      ));
   };
 
   return (
@@ -52,35 +65,20 @@ const Dashboard = () => {
               Agregar Tarea
             </Button>
           </Form.Group>
-          <ul className="list-group mt-4">
-            {tasks.map((task, index) => (
-              <li
-                key={index}
-                className={`list-group-item ${
-                  task.completed ? 'list-group-item-success' : ''
-                }`}
-              >
-                {task.name}
-                {!task.completed && (
-                  <Button
-                    className="float-right"
-                    variant="success"
-                    size="sm"
-                    onClick={() => handleCompleteTask(index)}
-                  >
-                    Completar
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-          <h4 className="mt-4">Puntos: {points}</h4>
-          <h5 className="mt-4">Logros Desbloqueados:</h5>
-          <ul>
-            {achievements.map((achievement, index) => (
-              <li key={index}>{achievement}</li>
-            ))}
-          </ul>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+        <Col md={4}>
+          <h5 className="text-center">Por hacer</h5>
+          <ul className="list-group">{renderTasks('todo')}</ul>
+        </Col>
+        <Col md={4}>
+          <h5 className="text-center">En progreso</h5>
+          <ul className="list-group">{renderTasks('in-progress')}</ul>
+        </Col>
+        <Col md={4}>
+          <h5 className="text-center">Completadas</h5>
+          <ul className="list-group">{renderTasks('completed')}</ul>
         </Col>
       </Row>
     </Container>
@@ -88,5 +86,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
