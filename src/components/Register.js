@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,6 @@ const Register = () => {
       alert('Las contraseñas no coinciden');
       return;
     }
-    // Envio de formulario
     console.log('Email:', email, 'Password:', password);
   };
 
@@ -56,6 +56,9 @@ const Register = () => {
               Registrarse
             </Button>
           </Form>
+          <p className="text-center mt-3">
+            ¿Ya tienes cuenta? <Link to="/">Inicia Sesión</Link>
+          </p>
         </Col>
       </Row>
     </Container>
