@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const [points, setPoints] = useState(0);
+  const [achievements, setAchievements] = useState([]);
 
   const handleAddTask = () => {
     if (newTask) {
@@ -17,6 +20,21 @@ const Dashboard = () => {
       i === index ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
+    if (newStatus === 'completed') {
+      setPoints(points + 10); // Sumar 10 puntos por cada tarea completada
+      checkAchievements(points + 10); // Verificar si se desbloquean logros
+    }
+  };
+
+  const checkAchievements = (newPoints) => {
+    const newAchievements = [];
+    if (newPoints >= 50 && !achievements.includes('Primer logro: 50 puntos')) {
+      newAchievements.push('Primer logro: 50 puntos');
+    }
+    if (newPoints >= 100 && !achievements.includes('Segundo logro: 100 puntos')) {
+      newAchievements.push('Segundo logro: 100 puntos');
+    }
+    setAchievements([...achievements, ...newAchievements]);
   };
 
   const renderTasks = (status) => {
@@ -65,6 +83,14 @@ const Dashboard = () => {
               Agregar Tarea
             </Button>
           </Form.Group>
+          <ul className="list-group mt-4">
+            <li className="list-group-item">
+              <Link to="/habit-tracker">Ir al Seguimiento de Hábitos</Link>
+            </li>
+            <li className="list-group-item">
+              <Link to="/tasks">Tablero de Tareas</Link>
+            </li>
+          </ul>
         </Col>
       </Row>
       <Row className="mt-4">
@@ -79,6 +105,17 @@ const Dashboard = () => {
         <Col md={4}>
           <h5 className="text-center">Completadas</h5>
           <ul className="list-group">{renderTasks('completed')}</ul>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+        <Col md={6}>
+          <h4 className="text-center">Puntos: {points}</h4>
+          <h5 className="text-center">Logros Desbloqueados:</h5>
+          <ul>
+            {achievements.map((achievement, index) => (
+              <li key={index}>{achievement}</li>
+            ))}
+          </ul>
         </Col>
       </Row>
     </Container>
