@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,18 @@ const Dashboard = () => {
   const [points, setPoints] = useState(0);
   const [achievements, setAchievements] = useState([]);
 
+  // Notificación después de 5 minutos de inactividad
+  useEffect(() => {
+    const inactivityTimeout = setTimeout(() => {
+      if (Notification.permission === "granted") {
+        new Notification("¡No olvides agregar tus tareas!");
+      }
+    }, 300000); // 300000ms = 5 minutos
+
+    return () => clearTimeout(inactivityTimeout); // Limpiar timeout cuando el componente se desmonta o actualiza
+  }, [tasks]);
+
+  // Manejo de agregar tarea
   const handleAddTask = () => {
     if (newTask) {
       setTasks([...tasks, { name: newTask, status: 'todo' }]);
@@ -91,9 +103,8 @@ const Dashboard = () => {
               <Link to="/tasks">Tablero de Tareas</Link>
             </li>
             <li className="list-group-item">
-                <Link to="/pomodoro">Temporizador Pomodoro</Link>
+              <Link to="/pomodoro">Temporizador Pomodoro</Link>
             </li>
-
           </ul>
         </Col>
       </Row>

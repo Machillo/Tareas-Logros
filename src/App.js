@@ -7,6 +7,17 @@ import HabitTracker from './components/HabitTracker';
 import PomodoroTimer from './components/PomodoroTimer';
 
 function App() {
+  useEffect(() => {
+    if ("Notification" in window) {
+      Notification.requestPermission()
+        .then(permission => {
+          if (permission === "granted") {
+            console.log("Permiso de notificaciones concedido");
+          }
+        });
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>
