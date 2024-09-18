@@ -90,6 +90,10 @@ const Dashboard = () => {
             <li className="list-group-item">
               <Link to="/tasks">Tablero de Tareas</Link>
             </li>
+            <li className="list-group-item">
+                <Link to="/pomodoro">Temporizador Pomodoro</Link>
+            </li>
+
           </ul>
         </Col>
       </Row>
