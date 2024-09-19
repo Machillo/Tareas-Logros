@@ -1,0 +1,68 @@
+body {
+  background-color: #1C1C1C; /* Gris oscuro */
+  color: #FFFFFF; /* Texto blanco */
+  font-family: 'Roboto', sans-serif;
+}
+
+.dashboard-title {
+  color: #0072CE; /* Azul claro */
+}
+
+.task-input {
+  background-color: #FFFFFF;
+  color: #1C1C1C;
+  border-radius: 5px;
+}
+
+.task-button {
+  background-color: #0072CE;
+  border-color: #0072CE;
+}
+
+.task-button:hover {
+  background-color: #003087;
+  border-color: #003087;
+}
+
+.dashboard-container {
+  background-color: #F1F1F1;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.list-group-item {
+  background-color: #F1F1F1;
+  color: #1C1C1C;
+  border: 1px solid #ddd;
+}
+
+.list-group-item:hover {
+  background-color: #0072CE;
+  color: #fff;
+}
+
+.task-section-title {
+  color: #0072CE;
+}
+
+.task-points {
+  color: #0072CE;
+}
+
+.achievement-item {
+  background-color: #1C1C1C;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.task-link a {
+  color: #0072CE;
+  text-decoration: none;
+}
+
+.task-link a:hover {
+  color: #003087;
+  text-decoration: underline;
+}

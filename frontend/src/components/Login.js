@@ -1,29 +1,17 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      const token = res.data.token;
-
-      // Guardar el token en localStorage
-      localStorage.setItem('token', token);
-
-      // Redirigir al dashboard
-      navigate('/dashboard');
-    } catch (err) {
-      console.error(err.response.data.msg);
-      alert('Error al iniciar sesión');
-    }
+    
+    // Temporalmente omitimos la autenticación y redirigimos directamente al dashboard
+    navigate('/dashboard');
   };
 
   return (
@@ -56,6 +44,10 @@ const Login = () => {
               Iniciar Sesión
             </Button>
           </Form>
+
+          <p className="text-center mt-3">
+            ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+          </p>
         </Col>
       </Row>
     </Container>

@@ -1,30 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import './Dashboard.css';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import './Dashboard.css';  // Importamos el archivo CSS para los estilos
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [points, setPoints] = useState(0);
   const [achievements, setAchievements] = useState([]);
-
-  // Obtener las tareas del backend cuando se carga el componente
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/tasks', {
-        headers: {
-          'x-auth-token': token
-        }
-      });
-      setTasks(res.data.tasks);
-      setPoints(res.data.points);
-      setAchievements(res.data.achievements);
-    };
-
-    fetchTasks();
-  }, []);
 
   // Notificación después de 5 minutos de inactividad
   useEffect(() => {
@@ -38,32 +22,18 @@ const Dashboard = () => {
   }, [tasks]);
 
   // Manejo de agregar tarea
-  const handleAddTask = async () => {
-    const token = localStorage.getItem('token');
+  const handleAddTask = () => {
     if (newTask) {
-      const res = await axios.post('http://localhost:5000/api/tasks', { name: newTask }, {
-        headers: {
-          'x-auth-token': token
-        }
-      });
-      setTasks([...tasks, res.data.task]);
+      setTasks([...tasks, { name: newTask, status: 'todo' }]);
       setNewTask('');
     }
   };
 
-  const moveTask = async (index, newStatus) => {
-    const token = localStorage.getItem('token');
+  const moveTask = (index, newStatus) => {
     const updatedTasks = tasks.map((task, i) =>
       i === index ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
-
-    // Actualizar el estado en el backend
-    await axios.put(`http://localhost:5000/api/tasks/${tasks[index]._id}`, { status: newStatus }, {
-      headers: {
-        'x-auth-token': token
-      }
-    });
 
     if (newStatus === 'completed') {
       setPoints(points + 10); // Sumar 10 puntos por cada tarea completada
@@ -86,13 +56,13 @@ const Dashboard = () => {
     return tasks
       .filter((task) => task.status === status)
       .map((task, index) => (
-        <li key={index} className="list-group-item">
+        <li key={index} className="list-group-item task-item">
           {task.name}
           {status === 'todo' && (
             <Button
               variant="primary"
               size="sm"
-              className="float-right"
+              className="float-right task-button"
               onClick={() => moveTask(index, 'in-progress')}
             >
               Iniciar
@@ -102,7 +72,7 @@ const Dashboard = () => {
             <Button
               variant="success"
               size="sm"
-              className="float-right"
+              className="float-right task-button"
               onClick={() => moveTask(index, 'completed')}
             >
               Completar
@@ -113,29 +83,30 @@ const Dashboard = () => {
   };
 
   return (
-    <Container>
+    <Container className="dashboard-container">
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h2 className="text-center">Dashboard de Tareas</h2>
+          <h2 className="text-center dashboard-title">Dashboard de Tareas</h2>
           <Form.Group>
             <Form.Control
               type="text"
               placeholder="Nueva tarea"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
+              className="task-input"
             />
-            <Button className="w-100 mt-2" onClick={handleAddTask}>
+            <Button className="w-100 mt-2 task-button" onClick={handleAddTask}>
               Agregar Tarea
             </Button>
           </Form.Group>
           <ul className="list-group mt-4">
-            <li className="list-group-item">
+            <li className="list-group-item task-link">
               <Link to="/habit-tracker">Ir al Seguimiento de Hábitos</Link>
             </li>
-            <li className="list-group-item">
+            <li className="list-group-item task-link">
               <Link to="/tasks">Tablero de Tareas</Link>
             </li>
-            <li className="list-group-item">
+            <li className="list-group-item task-link">
               <Link to="/pomodoro">Temporizador Pomodoro</Link>
             </li>
           </ul>
@@ -143,25 +114,25 @@ const Dashboard = () => {
       </Row>
       <Row className="mt-4">
         <Col md={4}>
-          <h5 className="text-center">Por hacer</h5>
+          <h5 className="text-center task-section-title">Por hacer</h5>
           <ul className="list-group">{renderTasks('todo')}</ul>
         </Col>
         <Col md={4}>
-          <h5 className="text-center">En progreso</h5>
+          <h5 className="text-center task-section-title">En progreso</h5>
           <ul className="list-group">{renderTasks('in-progress')}</ul>
         </Col>
         <Col md={4}>
-          <h5 className="text-center">Completadas</h5>
+          <h5 className="text-center task-section-title">Completadas</h5>
           <ul className="list-group">{renderTasks('completed')}</ul>
         </Col>
       </Row>
       <Row className="mt-4">
         <Col md={6}>
-          <h4 className="text-center">Puntos: {points}</h4>
-          <h5 className="text-center">Logros Desbloqueados:</h5>
+          <h4 className="text-center task-points">Puntos: {points}</h4>
+          <h5 className="text-center task-achievements-title">Logros Desbloqueados:</h5>
           <ul>
             {achievements.map((achievement, index) => (
-              <li key={index}>{achievement}</li>
+              <li key={index} className="achievement-item">{achievement}</li>
             ))}
           </ul>
         </Col>
