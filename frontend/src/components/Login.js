@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Email:', email, 'Password:', password);
+
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const token = res.data.token;
+
+      // Guardar el token en localStorage
+      localStorage.setItem('token', token);
+
+      // Redirigir al dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err.response.data.msg);
+      alert('Error al iniciar sesión');
+    }
   };
 
   return (
@@ -37,15 +52,10 @@ const Login = () => {
               />
             </Form.Group>
 
-            <Link to="/dashboard">
-              <Button variant="primary" className="w-100" type="submit">
-                Iniciar Sesión
-              </Button>
-            </Link>
+            <Button variant="primary" type="submit" className="w-100">
+              Iniciar Sesión
+            </Button>
           </Form>
-          <p className="text-center mt-3">
-            ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
-          </p>
         </Col>
       </Row>
     </Container>

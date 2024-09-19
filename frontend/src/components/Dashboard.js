@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [points, setPoints] = useState(0);
   const [achievements, setAchievements] = useState([]);
+
+  // Obtener las tareas del backend cuando se carga el componente
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('http://localhost:5000/api/tasks', {
+        headers: {
+          'x-auth-token': token
+        }
+      });
+      setTasks(res.data.tasks);
+      setPoints(res.data.points);
+      setAchievements(res.data.achievements);
+    };
+
+    fetchTasks();
+  }, []);
 
   // Notificación después de 5 minutos de inactividad
   useEffect(() => {
@@ -20,18 +38,33 @@ const Dashboard = () => {
   }, [tasks]);
 
   // Manejo de agregar tarea
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
+    const token = localStorage.getItem('token');
     if (newTask) {
-      setTasks([...tasks, { name: newTask, status: 'todo' }]);
+      const res = await axios.post('http://localhost:5000/api/tasks', { name: newTask }, {
+        headers: {
+          'x-auth-token': token
+        }
+      });
+      setTasks([...tasks, res.data.task]);
       setNewTask('');
     }
   };
 
-  const moveTask = (index, newStatus) => {
+  const moveTask = async (index, newStatus) => {
+    const token = localStorage.getItem('token');
     const updatedTasks = tasks.map((task, i) =>
       i === index ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
+
+    // Actualizar el estado en el backend
+    await axios.put(`http://localhost:5000/api/tasks/${tasks[index]._id}`, { status: newStatus }, {
+      headers: {
+        'x-auth-token': token
+      }
+    });
+
     if (newStatus === 'completed') {
       setPoints(points + 10); // Sumar 10 puntos por cada tarea completada
       checkAchievements(points + 10); // Verificar si se desbloquean logros
