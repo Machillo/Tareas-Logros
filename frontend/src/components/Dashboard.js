@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import './Dashboard.css';  // Importamos el archivo CSS para los estilos
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
@@ -18,11 +17,12 @@ const Dashboard = () => {
       }
     }, 300000); // 300000ms = 5 minutos
 
-    return () => clearTimeout(inactivityTimeout); // Limpiar timeout cuando el componente se desmonta o actualiza
+    return () => clearTimeout(inactivityTimeout);
   }, [tasks]);
 
-  // Manejo de agregar tarea
-  const handleAddTask = () => {
+  // Manejo de agregar tarea, permite agregar tarea con "Enter"
+  const handleAddTask = (e) => {
+    e.preventDefault();
     if (newTask) {
       setTasks([...tasks, { name: newTask, status: 'todo' }]);
       setNewTask('');
@@ -82,26 +82,33 @@ const Dashboard = () => {
       ));
   };
 
+  // Lógica para calcular el porcentaje de progreso
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(task => task.status === 'completed').length;
+  const progressPercentage = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+
   return (
     <Container className="dashboard-container">
       <Row className="justify-content-md-center">
         <Col md={6}>
           <h2 className="text-center dashboard-title">Dashboard de Tareas</h2>
-          <Form.Group>
-            <Form.Control
-              type="text"
-              placeholder="Nueva tarea"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              className="task-input"
-            />
-            <Button className="w-100 mt-2 task-button" onClick={handleAddTask}>
-              Agregar Tarea
-            </Button>
-          </Form.Group>
-          <ul className="list-group mt-4">
+          <Form onSubmit={handleAddTask}>
+            <Form.Group>
+              <Form.Control
+                type="text"
+                placeholder="Nueva tarea"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                className="task-input"
+              />
+              <Button className="w-100 mt-2 task-button" type="submit">
+                Agregar Tarea
+              </Button>
+            </Form.Group>
+          </Form>
+          <ul className="list-group mt-4 list-horizontal">
             <li className="list-group-item task-link">
-              <Link to="/habit-tracker">Ir al Seguimiento de Hábitos</Link>
+              <Link to="/habit-tracker">Seguimiento de Hábitos</Link>
             </li>
             <li className="list-group-item task-link">
               <Link to="/tasks">Tablero de Tareas</Link>
@@ -112,7 +119,26 @@ const Dashboard = () => {
           </ul>
         </Col>
       </Row>
-      <Row className="mt-4">
+
+      {/* Barra de progreso */}
+      <Row className="justify-content-md-center mt-4">
+        <Col md={6}>
+          <div className="progress">
+            <div
+              className="progress-bar"
+              role="progressbar"
+              style={{ width: `${progressPercentage}%` }}
+              aria-valuenow={progressPercentage}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {Math.round(progressPercentage)}%
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="mt-4 task-section-container">
         <Col md={4}>
           <h5 className="text-center task-section-title">Por hacer</h5>
           <ul className="list-group">{renderTasks('todo')}</ul>
@@ -126,6 +152,7 @@ const Dashboard = () => {
           <ul className="list-group">{renderTasks('completed')}</ul>
         </Col>
       </Row>
+
       <Row className="mt-4">
         <Col md={6}>
           <h4 className="text-center task-points">Puntos: {points}</h4>

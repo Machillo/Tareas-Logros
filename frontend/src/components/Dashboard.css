@@ -1,68 +1,156 @@
+/* Fondo general de la página */
 body {
-  background-color: #1C1C1C; /* Gris oscuro */
-  color: #FFFFFF; /* Texto blanco */
-  font-family: 'Roboto', sans-serif;
-}
-
-.dashboard-title {
-  color: #0072CE; /* Azul claro */
-}
-
-.task-input {
-  background-color: #FFFFFF;
-  color: #1C1C1C;
-  border-radius: 5px;
-}
-
-.task-button {
-  background-color: #0072CE;
-  border-color: #0072CE;
-}
-
-.task-button:hover {
-  background-color: #003087;
-  border-color: #003087;
-}
-
-.dashboard-container {
-  background-color: #F1F1F1;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.list-group-item {
-  background-color: #F1F1F1;
-  color: #1C1C1C;
-  border: 1px solid #ddd;
-}
-
-.list-group-item:hover {
-  background-color: #0072CE;
-  color: #fff;
-}
-
-.task-section-title {
-  color: #0072CE;
-}
-
-.task-points {
-  color: #0072CE;
-}
-
-.achievement-item {
-  background-color: #1C1C1C;
-  color: #fff;
-  padding: 5px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
-.task-link a {
-  color: #0072CE;
-  text-decoration: none;
-}
-
-.task-link a:hover {
-  color: #003087;
-  text-decoration: underline;
-}
+    background-color: #1C1C1C; /* Gris oscuro */
+    color: #FFFFFF; /* Texto blanco */
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .dashboard-title {
+    color: #00CCFF;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 3rem;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  .dashboard-container {
+    background-color: #292929;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease forwards;
+  }
+  
+  /* Input de tareas */
+  .task-input {
+    background-color: #FFFFFF;
+    color: #1C1C1C;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .task-input:focus {
+    box-shadow: 0px 0px 10px #0072CE; /* Resalta el input al enfocarlo */
+    outline: none;
+  }
+  
+  /* Estilos para los botones de tareas */
+  .task-button {
+    background-color: #0072CE;
+    border-color: #0072CE;
+    box-shadow: 0px 4px 10px rgba(0, 114, 206, 0.3);
+    transition: all 0.3s ease, transform 0.2s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .task-button:hover {
+    background-color: #003087;
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(0, 114, 206, 0.5);
+  }
+  
+  /* Estilos para las listas de tareas */
+  .list-group-item {
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #1C1C1C;
+    border: none;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .list-group-item:hover {
+    background-color: #0072CE;
+    color: #fff;
+    transform: scale(1.05); /* Efecto de zoom */
+  }
+  
+  /* Títulos de las secciones de tareas */
+  .task-section-title {
+    color: #0072CE;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Puntos y logros */
+  .task-points {
+    color: #FFB400; /* Color dorado para los puntos */
+    font-size: 1.8rem;
+    text-align: center;
+    animation: bounce 1s ease infinite; /* Efecto sutil de rebote */
+  }
+  
+  .achievement-item {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    animation: popUp 0.5s ease; /* Animación de aparición */
+  }
+  
+  /* Enlaces a otras secciones */
+  .task-link a {
+    color: #0072CE;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .task-link a:hover {
+    color: #FFB400; /* Cambia a dorado al pasar el ratón */
+    text-decoration: underline;
+  }
+  
+  /* Animaciones */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes popUp {
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
